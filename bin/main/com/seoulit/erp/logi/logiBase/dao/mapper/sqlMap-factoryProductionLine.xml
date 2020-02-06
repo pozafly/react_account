@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seoulit.erp.logi.logiBase.dao.FactoryProductionLineDao">
+	<select id="selectFactoryProductionLines"
+		resultType="FactoryPLTo"
+		parameterType="map">
+			SELECT 
+			FACTORY_CODE as factoryCode,
+			FACTORY_PRODUCTION_LINE_NO as factoryProductionLineNo,
+			PRODUCTION_LINE_CODE as productionLineCode,
+			AVAILABLE_STATUS as availableStatus,
+			PRODUCT_CODE as productCode,
+			JOB_GOAL_COUNT as jobGoalCount,
+			PRODUCTION_COUNT as productionCount,
+			JOB_END_DATE as jobEndDate,
+			WORK_INSTRUCTION_NO as workInstructionNo
+			 FROM FACTORY_PRODUCTION_LINE 
+			<where>
+				<if test="code=='factoryCode'">
+				FACTORY_CODE = #{factoryCode}
+				</if>
+				<if test="code=='workInstructionNo'">
+				WORK_INSTRUCTION_NO = #{workInstructionNo}
+				</if>
+			</where>
+	</select>
+	<!-- 여기에서 params를 다오에서 Map으로 보냄  ㅇㅋ?네네 -->
+
+	<insert id="insertFactoryPLs"
+		parameterType="FactoryPLTo">
+		INSERT INTO FACTORY_PRODUCTION_LINE
+		VALUES ( 
+			#{factoryCode}, 
+			#{factoryProductionLineNo},
+			#{productionLineCode}, 
+			#{availableStatus}, 
+			#{productCode},
+			#{jobGoalCount}, 
+			#{productionCount}, 
+			#{jobEndDate},
+			#{workInstructionNo} 
+			)
+	</insert>
+
+</mapper>

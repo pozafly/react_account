@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seoulit.erp.account.statement.dao.IncomeStatementDAO">
+	
+	<resultMap type="IncomeStatementTO" id="IncomeStatementResult">
+		
+		<result property="accountInnerCode" column="ACCOUNT_INNER_CODE"/>
+		<result property="accountName" column="ACCOUNT_NAME"/>
+		<result property="parentAccountCode" column="PARENT_ACCOUNT_CODE"/>
+		<result property="income" column="CURRENT_LEFT"/>
+		<result property="incomeSummary" column="CURRENT_RIGHT"/>
+		<result property="earlyIncome" column="EARLY_LEFT"/>
+		<result property="earlyIncomeSummary" column="EARLY_RIGHT"/>
+		
+	</resultMap>
+	
+	<select id="selectIncomeStatement" statementType="CALLABLE">
+		<![CDATA[
+			{call P_INCOME_STATE_OPEN (	#{approvalDate,mode=IN,javaType=String, jdbcType=VARCHAR}
+									   ,#{errorCode,mode=OUT,javaType=Integer, jdbcType=DECIMAL}
+									   ,#{errorMsg, mode=OUT,javaType=String, jdbcType=VARCHAR}
+									   ,#{result,mode=OUT,javaType=java.sql.ResultSet, jdbcType=CURSOR, resultMap=IncomeStatementResult}
+			)}
+		]]>
+	</select>
+</mapper>

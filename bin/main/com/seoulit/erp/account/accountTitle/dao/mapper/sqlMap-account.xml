@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seoulit.erp.account.accountTitle.dao.AccountDao">
+
+   <resultMap id="accountResult" type="AccountTO">
+        <result property="accountInnerCode" column="ACCOUNT_INNER_CODE"/>
+        <result property="parentAccountInnercode" column="PARENT_ACCOUNT_INNER_CODE"/>
+        <result property="accountCode" column="ACCOUNT_CODE"/>
+        <result property="accountCharacter" column="ACCOUNT_CHARACTER"/>
+        <result property="accountName" column="ACCOUNT_NAME"/>
+        <result property="accountUseCheck" column="ACCOUNT_USE_CHECK"/>
+        <result property="accountDescription" column="ACCOUNT_DESCRIPTION"/>
+        <result property="editable" column="EDITABLE"/>
+        <result property="parentGroup" column="PARENT_GROUP"/>
+        <result property="secondGroup" column="SECOND_GROUP"/>
+    </resultMap>
+    
+    <select id="selectParentAccountList" resultMap="accountResult">
+	    <![CDATA[
+			SELECT DECODE(parent_account_inner_code, '0101-0250', '자산', '0101-0175', '자산', '0101-0175', '자산', '0176-0250', '자산', '0251-0330', '부채' , '0331-0399', '자본', '0401-0999', '손익', '1000-1010', '특수계정과목' ) AS PARENT_GROUP 
+			     , DECODE(parent_account_inner_code, '0101-0175', '유동자산', '0176-0250', '비유동자산' ) AS second_group 
+			     , ACCOUNT_INNER_CODE 
+			     , PARENT_ACCOUNT_INNER_CODE 
+			     , ACCOUNT_CODE 
+			     , ACCOUNT_CHARACTER 
+			     , ACCOUNT_NAME 
+			     , ACCOUNT_DISPLAY_NAME_WITH_CODE 
+			     , ACCOUNT_DISPLAY_NAME 
+			     , ACCOUNT_DIVISION 
+			     , ACCOUNT_USE_CHECK 
+			     , ACCOUNT_DESCRIPTION 
+			  FROM ACCOUNT 
+			 WHERE account_code IS NULL 
+			       AND parent_account_inner_code IS NOT NULL 
+			       AND account_inner_code != '0101-0175'
+			       AND account_inner_code != '0176-0250'
+			START WITH PARENT_ACCOUNT_INNER_CODE IS NULL 
+			CONNECT BY PRIOR ACCOUNT_INNER_CODE = PARENT_ACCOUNT_INNER_CODE 
+			ORDER BY account_inner_code
+	    ]]>
+    </select>
+    
+            <!-- WHERE ACCOUNT_INNER_CODE BETWEEN '1000' AND '9999'
+          AND PARENT_ACCOUNT_INNER_CODE IS not NULL -->
+
+    <select id="selectDetailAccountList" parameterType="String" resultMap="accountResult">
+        SELECT *
+        from ACCOUNT
+        WHERE ACCOUNT_INNER_CODE not LIKE '%-%'
+        <if test="accountCode != 'null'" >
+          AND PARENT_ACCOUNT_INNER_CODE = #{accountCode}
+        </if>
+        ORDER BY ACCOUNT_INNER_CODE
+    </select>
+    
+</mapper>

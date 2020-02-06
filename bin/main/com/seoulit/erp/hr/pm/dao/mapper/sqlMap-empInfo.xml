@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seoulit.erp.hr.pm.dao.EmpInfoDao">
+
+    <resultMap id="empInfoResult" type="EmpInfoTo">
+        <result property="chk" column="CHK"/>
+        <result property="empCode" column="EMP_CODE"/>
+        <result property="empName" column="EMP_NAME"/>
+        <result property="residentNumber" column="RESIDENT_NUMBER"/>
+        <result property="birthDate" column="BIRTH_DATE"/>
+        <result property="gender" column="GENDER"/>
+        <result property="imgSrc" column="IMG_SRC"/>
+        <result property="zipCode" column="ZIP_CODE"/>
+        <result property="baseAddress" column="BASE_ADDRESS"/>
+        <result property="detailAddress" column="DETAIL_ADDRESS"/>
+        <result property="email" column="EMAIL"/>
+        <result property="tel" column="TEL"/>
+        <result property="phoneNumber" column="PHONE_NUMBER"/>
+        <result property="highestEducationCode" column="HIGHEST_EDUCATION_CODE"/>
+        <result property="nativeTypeCode" column="NATIVE_TYPE_CODE"/>
+        <result property="disabilityCode" column="DISABILITY_CODE"/>
+    </resultMap>
+
+
+    <!-- 사원의 상세정보를 가지고 오는 메서드  -->
+    <select id="selectEmpInfoAll" resultMap="empInfoResult">
+	<![CDATA[
+        SELECT /* EmpInfoDao.selectEmpInfoAll */
+            '0' AS CHK
+             , EMP_CODE
+             , EMP_NAME
+             , RESIDENT_NUMBER
+             , BIRTH_DATE
+             , GENDER
+             , TEL
+             , PHONE_NUMBER
+             , NATIVE_TYPE_CODE
+             , EMAIL
+             , HIGHEST_EDUCATION_CODE
+             , BASE_ADDRESS
+             , DETAIL_ADDRESS
+             , ZIP_CODE
+             , IMG_SRC
+             , DISABILITY_CODE
+        FROM EMPLOYEE_INFO
+        ORDER BY EMP_CODE
+        ]]>
+	</select>
+
+    <!-- 사원 한명의 상세정보를 가지고 오는 메서드  -->
+    <select id="selectEmpInfoList" resultMap="empInfoResult" parameterType="map">
+	<![CDATA[
+        SELECT /* EmpInfoDao.findEmpInfoList */
+            EMP_CODE
+             , EMP_NAME
+             , RESIDENT_NUMBER
+             , BIRTH_DATE
+             , GENDER
+             , TEL
+             , PHONE_NUMBER
+             , NATIVE_TYPE_CODE
+             , EMAIL
+             , HIGHEST_EDUCATION_CODE
+             , BASE_ADDRESS
+             , DETAIL_ADDRESS
+             , ZIP_CODE
+             , IMG_SRC
+             , DISABILITY_CODE
+        FROM EMPLOYEE_INFO
+        WHERE EMP_CODE = #{empCode}
+        ]]>
+	</select>
+
+
+	<select id="selectLastEmpCode" resultType="string"  >
+		SELECT EMP_CODE
+		FROM (SELECT EMP_CODE, 
+			ROWNUM RN 
+			FROM EMPLOYEE_INFO
+			ORDER BY EMP_CODE DESC) E
+		, (SELECT ROWNUM RN FROM DUAL) D
+		WHERE E.RN = D.RN
+	</select>
+
+
+
+
+    <insert id="insertEmpinfo" parameterType="EmpInfoTo">
+
+        INSERT INTO EMPLOYEE_INFO(EMP_CODE, EMP_NAME, RESIDENT_NUMBER, BIRTH_DATE, GENDER, TEL,
+                                  PHONE_NUMBER, NATIVE_TYPE_CODE, EMAIL, HIGHEST_EDUCATION_CODE,
+                                  BASE_ADDRESS, DETAIL_ADDRESS, ZIP_CODE, IMG_SRC, DISABILITY_CODE)
+        VALUES (#{empCode}, #{empName}, #{residentNumber}, #{birthDate}, #{gender}, #{tel},
+                #{phoneNumber}, #{nativeTypeCode}, #{email}, #{highestEducationCode},
+                #{baseAddress}, #{detailAddress}, #{zipCode}, #{imgSrc}, #{disabilityCode})
+
+    </insert>
+
+
+    <!-- 사원상세정보를 수정하는 메서드  업데이트 신규 -->
+    <update id="updateEmpInfo2" parameterType="EmpInfoTo">
+    
+        UPDATE EMPLOYEE_INFO SET
+        
+        EMP_CODE=#{empCode},
+        EMP_NAME=#{empName},
+        BIRTH_DATE=#{birthDate},
+        GENDER=#{gender},
+        PHONE_NUMBER=#{phoneNumber},
+        EMAIL=#{email},
+        BASE_ADDRESS=#{baseAddress},
+        DETAIL_ADDRESS=#{detailAddress}
+        WHERE EMP_CODE=#{empCode}
+
+    </update>
+
+
+
+
+
+    <!-- 사원상세정보를 수정하는 메서드 -->
+    <update id="updateEmpInfo" parameterType="EmpInfoTo">
+
+        UPDATE
+            EMPLOYEE_INFO
+
+        <set>
+            <if test="empName != null">
+             EMP_NAME=#{empName},
+            RESIDENT_NUMBER=#{residentNumber},
+            BIRTH_DATE='19'||SUBSTR(RESIDENT_NUMBER,0,4),
+            GENDER=#{gender},
+            IMG_SRC=#{imgSrc},
+            ZIP_CODE=#{zipCode},
+            BASE_ADDRESS=#{baseAddress},
+            DETAIL_ADDRESS=#{detailAddress},
+            EMAIL=#{email},
+            TEL=#{tel},
+            PHONE_NUMBER=#{phoneNumber},
+            HIGHEST_EDUCATION_CODE=#{highestEducationCode},
+            NATIVE_TYPE_CODE=#{nativeTypeCode},
+            DISABILITY_CODE=#{disabilityCode}
+            </if>
+--             이미지 업로드 하는용
+        <if test="empName == null">
+            IMG_SRC=#{imgSrc}
+        </if>
+        </set>
+        WHERE
+            EMP_CODE=#{empCode}
+
+    </update>
+
+    <delete id="deleteEmpinfo" parameterType="EmpInfoTo">
+        DELETE
+        FROM EMPLOYEE_INFO
+        WHERE EMP_CODE = #{empCode}
+    </delete>
+
+
+</mapper>

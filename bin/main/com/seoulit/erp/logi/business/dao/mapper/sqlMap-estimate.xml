@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seoulit.erp.logi.business.dao.EstimateDao">
+
+	<select id="createEstimateNo" resultType="String">
+		SELECT
+		ESTIMATE_NO.NEXTVAL FROM dual
+	</select>
+	
+	<delete id="deleteEstimate" parameterType="String">
+		delete from estimate where ESTIMATE_NO = #{estimateNo}
+	</delete>
+
+</mapper>

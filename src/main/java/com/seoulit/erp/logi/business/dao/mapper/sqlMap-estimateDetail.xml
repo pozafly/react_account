@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.seoulit.erp.logi.business.dao.EstimateDetailDao">
+	
+	<select id="countRecode" parameterType="String">
+		SELECT COUNT(*) FROM ESTIMATE_DETAIL WHERE ESTIMATE_NO = #{estimateNo}
+	</select>
+	
+	<resultMap type="estimateDetailTo" id="estimateDetailResult">
+		<result property="estimateDetailNo" column="ESTIMATE_DETAIL_NO"/>
+		<result property="estimateNo" column="ESTIMATE_NO"/>
+		<result property="itemCode" column="ITEM_CODE"/>
+		<result property="itemName" column="ITEM_NAME"/>
+		<result property="unitOfEstimate" column="UNIT_OF_ESTIMATE"/>
+		<result property="dueDateOfEstimate" column="DUE_DATE_OF_ESTIMATE"/>
+		<result property="estimateAmount" column="ESTIMATE_AMOUNT"/>
+		<result property="unitPriceOfEstimate" column="UNIT_PRICE_OF_ESTIMATE"/>
+		<result property="sumPriceOfEstimate" column="SUM_PRICE_OF_ESTIMATE"/>
+		<result property="description" column="DESCRIPTION"/>
+	</resultMap>
+	
+	<select id="selectEstimateDetailList" resultMap="estimateDetailResult">
+		select * from ESTIMATE_DETAIL WHERE ESTIMATE_NO = #{estimateNo}
+	</select>
+	
+	<delete id="deleteEstimateDetail" parameterType="String">
+		delete from ESTIMATE_DETAIL where ESTIMATE_NO = #{estimateNo}
+	</delete>
+
+</mapper>

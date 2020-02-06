@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seoulit.erp.hr.circumstance.dao.DeductionInsurDao">
+	<select id="selectDeductionTaxList" resultType="DeductionTaxTo" parameterType="String">
+		SELECT  
+			INPUTED_YEAR as inputedYear,
+			HEALTH_INSUR_RATE as healthInsurRate,
+			NATIONAL_PEN_RATE as nationalPenRate,
+			LONG_TERM_CARE_RATE as longTermCareRate,
+			EMPLOYEEMENT_INSUR_RATE as employeementInsurRate
+		FROM DEDUCTIONS_TAX_MGT
+		where inputed_year = #{year}
+		ORDER BY INPUTED_YEAR
+	</select>
+	
+	<select id="selectIncomeTaxList" resultType="IncomeTaxTo" parameterType="String">
+	      SELECT 
+	      	INPUTED_YEAR as inputedYear,
+	      	INCOME_TAX_RATE as incomeTaxRate,
+	      	LOW_SAL as lowSal,
+	      	HIGH_SAL as highSal,
+	      	PROGRESSIVE_DEDUCTION as progressiveDeduction
+	      FROM INCOME_TAX_MGT
+	      where inputed_year = #{year}
+	      ORDER BY INPUTED_YEAR,TO_NUMBER(INCOME_TAX_RATE) asc
+	</select>
+	
+	<update id="updateDeductionTaxList" parameterType="deductionTaxTo"></update>
+	<delete id="deleteDeductionTaxList" parameterType="deductionTaxTo">
+		  DELETE FROM DEDUCTIONS_TAX_MGT
+	      WHERE INPUTED_YEAR = #{inputedYear}
+	</delete>
+	<insert id="insertDeductionTaxList" parameterType="deductionTaxTo">
+		  INSERT INTO
+	      DEDUCTIONS_TAX_MGT
+	      VALUES (
+	          #{inputedYear},
+	          #{healthInsurRate},
+	          #{nationalPenRate},
+	          #{longTermCareRate},
+	          #{employeementInsurRate}
+	      )	
+	</insert>
+	
+	<update id="updateIncomeTaxList" parameterType="incomeTaxTo"></update>
+	<delete id="deleteIncomeTaxList" parameterType="incomeTaxTo">
+		  DELETE
+	      FROM INCOME_TAX_MGT
+	      WHERE INPUTED_YEAR = #{inputedYear}
+	</delete>
+	<insert id="insertIncomeTaxList" parameterType="incomeTaxTo">
+		    INSERT INTO
+	        INCOME_TAX_MGT
+	        VALUES (
+	            #{incomeTaxRate},
+	            #{inputedYear},
+	            #{lowSal},
+	            #{highSal},
+	            #{progressiveDeduction}
+	        )
+	</insert>
+</mapper>

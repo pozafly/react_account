@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seoulit.erp.account.slip.dao.JournalDAO">
+
+    <resultMap type="accountControlDetailTO" id="accountControlDetailResult">
+    
+		<result property="accountCode" column="ACCOUNT_CODE" />
+		<result property="accountControlCode" column="ACCOUNT_CONTROL_CODE" />
+		<result property="accountControlName" column="ACCOUNT_CONTROL_NAME" />
+		<result property="accountControlType" column="ACCOUNT_CONTROL_TYPE" />
+		<result property="accountControlDescription" column="ACCOUNT_CONTROL_DESCRIPTION" />
+		
+	</resultMap>
+
+	<select id="getAccountControlDetailList" resultMap="accountControlDetailResult" parameterType="string">
+		<![CDATA[
+		SELECT 
+		a.ACCOUNT_CODE as ACCOUNT_CODE
+		, a.ACCOUNT_CONTROL_CODE as ACCOUNT_CONTROL_CODE
+		, b.ACCOUNT_CONTROL_NAME as ACCOUNT_CONTROL_NAME
+		, b.ACCOUNT_CONTROL_TYPE as ACCOUNT_CONTROL_TYPE
+		, b.ACCOUNT_CONTROL_DESCRIPTION as ACCOUNT_CONTROL_DESCRIPTION
+		FROM ACCOUNT_CONTROL_CODE a,ACCOUNT_CONTROL_DETAIL b
+		WHERE a.ACCOUNT_CONTROL_CODE=B.ACCOUNT_CONTROL_CODE
+		  AND a.ACCOUNT_CODE=#{accountCode}
+		ORDER BY ACCOUNT_CONTROL_CODE
+		]]>
+	</select>
+
+	<insert id="insertJournalDetailInfo" parameterType="journalDetailTO">
+		<![CDATA[
+		INSERT INTO
+		JOURNAL_DETAIL(JOURNAL_NO,
+					   JOURNAL_DETAIL_NO,
+					   ACCOUNT_CONTROL_NAME,
+					   ACCOUNT_CONTROL_CODE,
+					   DESCRIPTION		   
+					   )
+		VALUES(#{journalNo,jdbcType=VARCHAR},
+			   JOURNAL_DETAIL_NO_SEQ.NEXTVAL,
+			   #{accountControlName,jdbcType=VARCHAR},
+			   #{accountControlCode,jdbcType=VARCHAR},
+			   #{description,jdbcType=VARCHAR}
+			   )
+			   
+			]]>
+	</insert>
+
+	<delete id="deleteJournalDetailInfo" parameterType="journalDetailTO">
+		<![CDATA[
+		DELETE FROM JOURNAL_DETAIL WHERE JOURNAL_DETAIL_NO=#{journaldetailNO}
+		]]>
+	</delete>
+
+	<update id="updateJournalDetailInfo" parameterType="journalDetailTO">
+		<![CDATA[
+		UPDATE JOURNAL_DETAIL SET
+			JOURNAL_NO=#{journalNo,jdbcType=VARCHAR},
+			JOURNAL_DETAIL_NO=#{journalDetailNo,jdbcType=VARCHAR},
+			ACCOUNT_CONTROL_NAME=#{accountControlName,jdbcType=VARCHAR},
+			ACCOUNT_CONTROL_CODE=#{accountControlCode,jdbcType=VARCHAR},
+			DESCRIPTION=#{description,jdbcType=VARCHAR}
+			
+		WHERE JOURNAL_DETAIL_NO = #{journaldetailNO}
+		]]>
+	</update>
+	
+	<select id="getJournalRowCount" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) FROM JOURNAL WHERE slip_no = #{slipNo}
+	</select>
+
+
+</mapper>

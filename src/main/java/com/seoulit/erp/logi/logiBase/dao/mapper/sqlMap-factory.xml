@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seoulit.erp.logi.logiBase.dao.FactoryDao">
+	<select id="selectFactoryList"
+		resultType="FactoryTo"
+		parameterType="map">
+		SELECT
+			 FACTORY.FACTORY_CODE as factoryCode,
+			 FACTORY.FACTORY_NAME as factoryName,
+			 FACTORY.FACTORY_MANAGER_CODE as factoryManagerCode,
+			 FACTORY.AVAILABLE_CAPACITY as availableCapacity,
+			 FACTORY.AVAILABLE_STATUS as availableStatus,
+			 FACTORY.PHONE as phone,
+			 FACTORY.ADRESS as adress
+		<if test="itemCode=='all'">
+			FROM FACTORY
+		</if>
+		<if test="itemCode!='all'">
+			FROM 
+				FACTORY, FACTORY_PRODUCTION_LINE
+			WHERE 
+				FACTORY.FACTORY_CODE = FACTORY_PRODUCTION_LINE.FACTORY_CODE
+			AND 
+				FACTORY_PRODUCTION_LINE.PRODUCT_CODE = #{itemCode}
+		</if>
+	</select>
+	
+	<insert id="insertFactory" parameterType="factoryTo">
+		INSERT INTO FACTORY
+		VALUES(
+			#{factoryCode}, 
+			#{factoryName},
+			#{factoryManagerCode},
+			#{availableCapacity},
+			#{availableStatus}, 
+			#{phone},
+			#{adress}
+			)
+	</insert>
+
+</mapper>

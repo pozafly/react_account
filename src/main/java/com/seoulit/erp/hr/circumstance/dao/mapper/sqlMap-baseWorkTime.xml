@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seoulit.erp.hr.circumstance.dao.BaseWorkTimeDao">
+	<select id="selectBaseWorkTimeList" resultType="BaseWorkTimeTo">
+		SELECT 	
+			APPLY_YEAR as applyYear,
+			ATTEND_TIME as attendTime,
+			QUIT_TIME as quitTime,
+			OVER_TIME as overTime,
+			NIGHT_TIME as nightTime,
+			LUNCH_START_TIME as lunchStartTime,
+			LUNCH_END_TIME as lunchEndTime,
+			DINNER_START_TIME as dinnerStartTime,
+			DINNER_END_TIME as dinnerEndTime 
+		FROM BASE_WORK_TIME
+	</select>
+	
+	<insert id="insertBaseWorkTime" parameterType="baseWorkTimeTo">
+				INSERT INTO
+		BASE_WORK_TIME
+		VALUES (
+			#{applyYear},
+			#{attendTime},
+			#{quitTime},
+			#{overTime},
+			#{nightTime},
+ 			#{lunchStartTime},
+			#{lunchEndTime},
+			#{dinnerStartTime},
+			#{dinnerEndTime}
+	   )	
+	</insert>
+	
+	<update id="updateBaseWorkTime" parameterType="baseWorkTimeTo">
+		UPDATE BASE_WORK_TIME
+		SET
+			ATTEND_TIME = #{attendTime},
+			QUIT_TIME = #{quitTime},
+			OVER_TIME = #{overTime},
+			NIGHT_TIME = #{nightTime},
+			LUNCH_START_TIME = #{lunchStartTime},
+			LUNCH_END_TIME = #{lunchEndTime},
+			DINNER_START_TIME=#{quitTime},
+			DINNER_END_TIME=#{overTime}
+		WHERE APPLY_YEAR = #{applyYear}
+	</update>
+	
+	<delete id="deleteBaseWorkTime" parameterType="baseWorkTimeTo">
+		DELETE
+		FROM BASE_WORK_TIME
+		WHERE APPLY_YEAR=#{applyYear}
+	</delete>
+</mapper>

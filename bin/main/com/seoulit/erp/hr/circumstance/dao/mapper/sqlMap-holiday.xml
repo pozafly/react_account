@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seoulit.erp.hr.circumstance.dao.HolidayDao">
+	<select id="selectHolidayList" resultType="HolidayTo" parameterType="map">
+        SELECT 
+        	BASIC_DAY as basicDay,
+        	HOLIDAY_NAME as holidayName,
+        	NOTE as note,
+        	HOLIDAY_TYPE as holidayType 
+        FROM HOLIDAY_MGT 
+        <if test=" fromDate != null and toDate != null">
+        WHERE BASIC_DAY BETWEEN #{fromDate} AND #{toDate}
+        ORDER BY BASIC_DAY
+        </if>
+	</select>
+	
+	<insert id="insertHoliday" parameterType="holidayTo">
+		INSERT INTO HOLIDAY_MGT VALUES (
+	            #{basicDay},
+	            #{holidayName},
+	            #{note},
+	            #{holidayType}
+	    )
+	</insert>
+	<delete id="deleteHoliday" parameterType="holidayTo">
+		DELETE FROM HOLIDAY_MGT
+ 		WHERE BASIC_DAY = #{basicDay}
+	</delete>
+	<update id="updateHoliday" parameterType="holidayTo">
+		UPDATE HOLIDAY_MGT
+		SET HOLIDAY_NAME = #{holidayName},
+	    	NOTE = #{note},
+	    	HOLIDAY_TYPE = #{holidayType}
+		WHERE BASIC_DAY = #{basicDay}
+	</update>
+</mapper>

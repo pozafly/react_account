@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seoulit.erp.account.statement.dao.FinancialStatementsDAO">
+    
+    <resultMap type="financialStatementsTO" id="financialStatementsResult">
+
+  		<result property="lev" column="LEV"/>
+  		<result property="category" column="CATEGORY"/>
+  		<result property="accountName" column="ACCOUNT_NAME"/>
+  		<result property="accountCode" column="ACCOUNT_CODE"/>
+  		<result property="balanceDetail" column="BALANCE_DETAIL"/>
+  		<result property="balanceSummary" column="BALANCE_SUMMARY"/>
+  		<result property="preBalanceDetail" column="PRE_BALANCE_DETAIL"/>
+  		<result property="preBalanceSummary" column="PRE_BALANCE_SUMMARY"/>
+  		
+  	</resultMap>
+ 	
+ 	<select id="selectFinancialStatements" statementType="CALLABLE" >
+		<![CDATA[
+               {call P_FINANCIAL_POSITION (#{approvalDate, mode=IN, javaType=String, jdbcType=VARCHAR},
+                                        #{errorCode, mode=OUT, javaType=Integer, jdbcType=DECIMAL},
+                                        #{errorMsg, mode=OUT, javaType=String, jdbcType=VARCHAR},
+                                        #{result, mode=OUT, javaType=java.sql.ResultSet, jdbcType=CURSOR, resultMap=financialStatementsResult})}
+                                 
+            ]]>   				 
+    </select>
+
+
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seoulit.erp.hr.circumstance.dao.AnnualLeaveDao">
+	<select id="selectAnnualLeaveList" resultType="AnnualLeaveTo">
+		SELECT EMP_CODE          as empCode
+			 , STANDARD_YEAR     as standardYear
+			 , REST_DAYS         as restDays
+			 , USABLE_DAYS       as usableDays
+			 , USED_DAYS         as usedDays
+			 , LENGTH_OF_SERVICE as lengthOfService
+		FROM ANNUAL_MGT
+		ORDER BY STANDARD_YEAR DESC
+	</select>
+
+	<parameterMap type="Map" id="annualLeaveMgtParameter">
+		<parameter property="empCode" mode="IN" javaType="string" jdbcType="VARCHAR"/>
+		<parameter property="standardYear" mode="IN" javaType="string" jdbcType="VARCHAR"/>
+		<parameter property="hireDate" mode="IN" javaType="string" jdbcType="VARCHAR"/>
+		<parameter property="errorCode" mode="OUT" javaType="string" jdbcType="VARCHAR"/>
+		<parameter property="errorMsg" mode="OUT" javaType="string" jdbcType="VARCHAR"/>
+	</parameterMap>
+	<select id="createAnnualLeave" statementType="CALLABLE" parameterMap="annualLeaveMgtParameter"
+			resultType="map">
+		CALL P_HR_ANNUAL.P_CREATE_ANNUAL(?, ?, ?, ?, ?)
+	</select>
+
+	<update id="updateAnnualLeave" parameterType="annualLeaveTo">
+		UPDATE
+			ANNUAL_MGT
+		SET REST_DAYS         = #{restDays},
+			USABLE_DAYS       = #{usableDays},
+			USED_DAYS         = #{usedDays},
+			LENGTH_OF_SERVICE = #{lengthOfService}
+		WHERE EMP_CODE = #{empCode}
+		  AND STANDARD_YEAR = #{standardYear}
+	</update>
+	<delete id="deleteAnnualLeave" parameterType="annualLeaveTo">
+		DELETE
+		FROM ANNUAL_MGT
+		WHERE EMP_CODE = #{empCode}
+		  AND STANDARD_YEAR = #{standardYear}
+	</delete>
+	<insert id="insertAnnualLeave" parameterType="annualLeaveTo">
+		INSERT INTO ANNUAL_MGT
+		VALUES (#{standardYear},
+				#{empCode},
+				#{usedDays},
+				#{restDays},
+				#{usableDays},
+				#{lengthOfService})
+	</insert>
+
+	<select id="selectEmpAnnualData"
+			parameterType="string" resultType="EmpAnnualDataTo">
+		select AM.STANDARD_YEAR as standardYear,
+			   E.EMP_NAME as empName,
+			   D.DEPT_NAME as deptName,
+			   AM.LENGTH_OF_SERVICE as lengthOfService,
+			   AM.USABLE_DAYS as usableDays,
+			   AM.USED_DAYS as usedDays,
+			   AM.REST_DAYS as restDays
+		from ANNUAL_MGT AM,
+			 EMPLOYEE E,
+			 DEPARTMENT D
+		WHERE AM.EMP_CODE = E.EMP_CODE
+		  AND E.DEPT_CODE = D.DEPT_CODE
+		  AND E.EMP_CODE = #{empCode}
+	</select>
+
+</mapper>

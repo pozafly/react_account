@@ -1,0 +1,63 @@
+import React, { useEffect, useState } from 'react';
+import useAxios from "../../../../api/util/useAxios";
+import { AgGridReact } from "ag-grid-react";
+
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-balham.css";
+
+import { AllModules } from "ag-grid-enterprise";
+
+const AccountParent = ({setAccountCode}) => {
+
+  const accountColumnDefs = [
+    { headerName: "parentGroup", field: "parentGroup", width: 120, rowGroup: true, hide: true },
+    { headerName: "secondGroup", field: "secondGroup", width: 120, rowGroup: true, hide: true },
+    { headerName: "계정과목 코드", field: "accountInnerCode", width: 270 },
+    { headerName: "계정과목 명", field: "accountName", width: 270 }
+  ];
+  
+  const defaultColDef = { sortable: true };
+
+  const onRowSelected = e => {
+    if(e.node.selected){
+      setAccountCode(e.data.accountInnerCode);
+    }
+  };
+
+  const axiosOptions = {
+    url: `http://localhost:8282/account/accountTitle/findParentAccountList`,
+    method: "GET",
+    fetchOnStart: false
+  };
+
+  // const code = useInput();
+  const { data, fetch } = useAxios(axiosOptions);
+
+  useEffect(() => {
+    fetch(axiosOptions);
+  }, []);
+  console.log(data)
+
+  return (
+    <div
+      className={"ag-theme-balham"}
+      style={{
+        height: "550px",
+        width: "100%",
+        paddingTop: "20px"
+      }}>
+      <AgGridReact
+        columnDefs={accountColumnDefs}
+        rowData={data}
+        onRowSelected={onRowSelected}
+        rowSelection="single"
+        defaultColDef={defaultColDef}
+        modules={AllModules}
+        animateRows={true}
+        enableRangeSelection={true}
+      />
+    </div>
+  );
+};
+
+export default AccountParent;

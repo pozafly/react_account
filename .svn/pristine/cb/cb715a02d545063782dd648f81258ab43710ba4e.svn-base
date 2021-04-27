@@ -1,0 +1,55 @@
+import React, { useEffect } from 'react';
+import useAxios from "../../../../api/util/useAxios";
+import { AgGridReact } from "ag-grid-react";
+
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-balham.css";
+
+const AccountDetail = ({accountCode}) => {
+
+  const accountColumnDefs = [
+    {
+      headerName: "계정과목 코드",
+      field: "accountInnerCode",
+      width: 150
+    },
+    {
+      headerName: "계정과목 명",
+      field: "accountName",
+      width: 220
+    }
+  ];
+
+  const axiosOptions = {
+    url: `http://localhost:8282/account/accountTitle/findDetailAccountList?code=${accountCode}`,
+    method: "GET",
+    fetchOnStart: false
+  };
+
+  // const code = useInput();
+  const { data, fetch } = useAxios(axiosOptions);
+
+  useEffect(() => {
+    fetch(axiosOptions);
+  }, [accountCode]);
+
+  return (
+    <div
+      className={"ag-theme-balham"}
+      style={{
+        height: "550px",
+        width: "100%",
+        paddingTop: "20px"
+      }}>
+      <AgGridReact
+        columnDefs={accountColumnDefs}
+        rowData={data ? data : null}
+        onGridReady={event => {
+          event.api.sizeColumnsToFit();
+        }}
+      />
+    </div>
+  );
+};
+
+export default AccountDetail;

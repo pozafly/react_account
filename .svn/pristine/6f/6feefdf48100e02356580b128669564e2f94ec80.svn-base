@@ -1,0 +1,83 @@
+import React, { useEffect, useState } from "react";
+import Paper from "@material-ui/core/Paper";
+
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-material.css";
+import { Grid } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Typography from "@material-ui/core/Typography";
+import Toolbar from "@material-ui/core/Toolbar";
+
+import AccountParent from './AccountParent';
+import AccountDetail from './AccountDetail';
+
+const useStyles = makeStyles(theme => ({
+  rightPaper: {
+    padding: theme.spacing(2),
+    height: 650
+  },
+  leftPaper: {
+    padding: theme.spacing(2),
+    height: 650
+  },
+  subCategory: {
+    background: "#232f3e",
+    color: "white"
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
+  }
+}));
+
+const AccountTitle = props => {
+
+  useEffect(() => {
+    setAccountCode(null);
+  }, []);
+
+  const [accountCode, setAccountCode] = useState('');
+
+  const classes = useStyles();
+
+  // const onSelectionChanged = event => {
+  //   const gridApi = event.api;
+  //   const selectedRows = gridApi.getSelectedRows();
+  //   axiosOptions.selectedRows = selectedRows;
+  // };
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={7}>
+        <Paper className={classes.leftPaper}>
+          <AppBar position="relative" className={classes.subCategory}>
+            <Toolbar>
+              <Typography variant="h5">상위 계정과목</Typography>
+            </Toolbar>
+          </AppBar>
+          <div>
+            {/* <AgGridReact columnDefs={accountColumnDefs} rowData={data} /> */}
+            <AccountParent setAccountCode={setAccountCode}/>
+          </div>
+          <br />
+        </Paper>
+      </Grid>
+      <Grid item xs={5}>
+        <Paper className={classes.rightPaper}>
+          <AppBar position="relative" className={classes.subCategory}>
+            <Toolbar>
+              <Typography variant="h5">상세 계정과목</Typography>
+            </Toolbar>
+          </AppBar>
+          <div>
+            {/* <AgGridReact columnDefs={accountColumnDefs} rowData={data ? data.etcSudangList : []} /> */}
+            <AccountDetail accountCode={accountCode}/>
+          </div>
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+};
+
+export default AccountTitle;

@@ -1,0 +1,165 @@
+import React, { useState, useEffect } from 'react';
+
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-balham.css";
+
+import accountApi from '../../../../../api/axios/accountApi';
+import AccountDialog from './AccountDialog'
+
+import { makeStyles, Grid } from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Button from '@material-ui/core/Button';
+
+const JournalGrid = ({ slipNo, flag, today }) => {
+
+    //========================== 그리드 객체 준비 ==========================
+    const [gridApi, setGridApi] = useState();
+    const [columnApi, setColumnApi] = useState();
+    const onGridReady = params => {
+        setGridApi(params.api);
+        setColumnApi(params.columnApi);
+    };
+
+    const classes = useStyles();
+    const [data, setData] = useState('');
+    let [journalNo, setJournalNo] = useState('');
+
+    //========================== 그리드초기화 ==========================
+    const initalBtn = () => {
+        gridApi.selectAll();
+        const allData = gridApi.getSelectedRows();
+        gridApi.updateRowData({ remove: allData });
+    };
+
+    //========================== 분개조회 ==========================
+    useEffect(() => {
+        async function getJournalListForSlip() {
+            const response = await accountApi.get('/slip/getJournalListForSlip', {
+                params: {
+                    slipNo: slipNo
+                }
+            });
+            setData(response.data);
+        };
+        async function getJournalRowCount() {
+            const response = await accountApi.get('/slip/getJournalRowCount', {
+                params: {
+                    slipNo: slipNo
+                }
+            });
+            setJournalNo(response.data);
+        };
+        getJournalListForSlip();
+        getJournalRowCount();
+    }, [slipNo]);
+
+    //========================== 분개추가 ==========================
+    const addBtn = () => {
+            const newItem = createNewRowData();
+            gridApi.updateRowData({ add: [newItem] });
+    }
+    const createNewRowData = () => {
+        let newData = {
+            journalNo: `${slipNo}JOURNAL0${++journalNo}`,
+        };
+        return newData;
+    };
+
+
+    //========================== 분개그리드 클릭 이벤트 ==========================
+            
+    const [open, setOpen] = useState(false);
+    const [selectedValue, setSelectedValue] = useState('');
+  
+    const handleClose = value => {
+      setOpen(false);
+      setSelectedValue(value);
+    };
+
+    const onCellClicked = id => {
+        console.log(id.colDef.field);
+        if(id.colDef.field === 'accountInnerCode' || id.colDef.field  ==='accountName'){
+            setOpen(true);
+        }
+    };
+
+    //========================== 그리드내용 ==========================
+    const accountColumnDefs = [
+        { headerName: "분개일련번호", field: "journalNo", width: 250 },
+        { headerName: "계정코드", field: "accountInnerCode", width: 100, id: 'accountInnerCode'},
+        { headerName: "계정명", field: "accountName", width: 110 },
+        { headerName: "대차구분", field: "balanceDivision", width: 100 },
+        { headerName: "적요", field: "summaryComment", width: 180, editable: true },
+        { headerName: "거래처코드", field: "customerCode", width: 110 },
+        { headerName: "거래처명", field: "customerName", width: 110 },
+        { headerName: "금액", field: "price", width: 110 },
+    ];
+
+    return (
+        <div>
+            <Paper className={classes.paper}>
+                <div className={classes.root} style={{ width: '30%', float: 'left' }}>
+                    <Button variant="contained" color="primary" onClick={initalBtn}>
+                        그리드초기화
+                    </Button>
+                </div>
+                <div className={classes.root} style={{ width: '27%', float: 'right' }}>
+                    <Button variant="contained" color="primary" disabled={flag} onClick={addBtn}>
+                        분개추가
+                    </Button>
+                    <Button variant="contained" color="primary" disabled={flag}>
+                        분개삭제
+                    </Button>
+                    <Button variant="contained" color="primary" disabled={flag}>
+                        분개저장
+                    </Button>
+                </div>
+                <AppBar position="relative" className={classes.subCategory}>
+                    <Toolbar>
+                        <Typography variant="h5">분개</Typography>
+                    </Toolbar>
+                </AppBar>
+                <div
+                    className={"ag-theme-balham"}
+                    style={{
+                        height: "200px",
+                        width: "100%",
+                        paddingTop: "20px"
+                    }}>
+                    <AgGridReact
+                        columnDefs={accountColumnDefs}
+                        rowData={data}
+                        rowSelection='single'
+                        onGridReady={onGridReady}
+                        onCellClicked={onCellClicked}
+                    />
+                </div>
+                <br />
+            </Paper>
+            <AccountDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
+        </div>
+    );
+};
+
+const useStyles = makeStyles(theme => ({
+    paper: {
+        padding: theme.spacing(1),
+        height: 330,
+        width: 1190
+    },
+    subCategory: {
+        background: "#232f3e",
+        color: "white"
+    },
+    root: {
+        '& > *': {
+            margin: theme.spacing(1),
+        },
+    },
+}));
+
+export default JournalGrid;

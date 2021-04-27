@@ -1,0 +1,19 @@
+package com.seoulit.erp.account.statement.to;
+
+import com.seoulit.common.to.BaseTo;
+
+import lombok.Data;
+
+@Data
+public class FinancialStatementsTO extends BaseTo{
+	
+    private String lev;
+    private String category;
+    private String accountName;
+    private String accountCode;
+    private String balanceDetail;
+    private String balanceSummary;
+    private String preBalanceDetail;
+    private String preBalanceSummary;
+	
+}

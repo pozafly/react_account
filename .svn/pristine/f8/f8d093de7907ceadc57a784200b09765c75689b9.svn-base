@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seoulit.erp.account.slip.dao.SlipDAO">
+
+    <!-- slipDAO -->
+    <resultMap type="slipTo" id="slipResult">
+    
+    		<result property="slipNo" column="SLIP_NO"/>
+    		<result property="accountPeriodNo" column="ACCOUNT_PERIOD_NO"/>
+    		<result property="deptCode" column="DEPT_CODE"/>
+    		<result property="slipType" column="SLIP_TYPE"/>
+    		<result property="expenseReport" column="EXPENSE_REPORT"/>
+    		<result property="authorizationStatus" column="AUTHORIZATION_STATUS"/>
+    		<result property="reportingEmpCode" column="REPORTING_EMP_CODE"/>
+    		<result property="reportingDate" column="REPORTING_DATE"/>
+    		<result property="reportingTime" column="REPORTING_TIME"/>
+    		<result property="approvalEmpCode" column="APPROVAL_EMP_CODE"/>
+    		<result property="approvalDate" column="APPROVAL_DATE"/>
+    		<result property="approvalTime" column="APPROVAL_TIME"/>
+    		<result property="modifyingEmpCode" column="MODIFYING_EMP_CODE"/>
+    		<result property="modifyingDate" column="MODIFYING_DATE"/>
+    		<result property="modifyingTime" column="MODIFYING_TIME"/>
+    		<result property="accountDifference" column="ACCOUNT_DIFFERENCE"/>
+    		<result property="slipDescription" column="SLIP_DESCRIPTION"/>
+    		<result property="slipStatus" column="SLIP_STATUS"/>
+   	
+    	</resultMap>
+
+    	<select id="getSlipList" parameterType="map" resultMap="slipResult">
+    		<![CDATA[
+    			SELECT * 
+    			FROM SLIP 
+    			WHERE (APPROVAL_DATE  BETWEEN #{startDate} AND #{endDate} or REPORTING_DATE BETWEEN #{startDate} AND #{endDate})
+            	AND SLIP_STATUS=#{slipStatus}
+            ]]>
+    	</select >
+    	
+    	<select id="getSlipRowCount" parameterType="String" resultType="Integer">
+    		SELECT COUNT(*) FROM SLIP
+			WHERE reporting_date = #{reportingDate}
+    	</select>
+    	
+    	<select id="getSlipTotalList" parameterType="map" resultMap="slipResult">
+    		<![CDATA[
+    			SELECT * 
+    			FROM SLIP
+    			WHERE (APPROVAL_DATE  BETWEEN #{startDate} AND #{endDate} or REPORTING_DATE BETWEEN #{startDate} AND #{endDate})
+    		]]>
+    	</select>
+
+
+ 		<insert id="insertSlipInfo" parameterType="slipTo" statementType="CALLABLE">
+			<![CDATA[
+				{CALL P_INSERT_SLIP(
+						#{slipNo,jdbcType=VARCHAR}
+						, #{slipType,jdbcType=VARCHAR}
+						, #{reportingDate,jdbcType=VARCHAR}
+						, #{expenseReport,jdbcType=VARCHAR}
+						, #{approvalEmpCode,jdbcType=VARCHAR}										
+						, #{reportingEmpCode,jdbcType=VARCHAR}
+						, #{slipStatus,jdbcType=VARCHAR}
+						, #{deptCode,jdbcType=VARCHAR}
+						, #{approvalDate,jdbcType=VARCHAR}   )}						
+				]]>
+		</insert>
+		
+		
+		<!-- slipNo -->
+  		<select id="addNewSlipNo" parameterType="string" resultType="slipTo">
+  				SELECT #{strDate}||'-'||LPAD(SLIP_NO_SEQ.NEXTVAL,4,0) as slipNo FROM dual
+  		</select>
+  		
+  		<update id="updateDifference" parameterType="String">
+  			UPDATE SLIP SET
+				ACCOUNT_DIFFERENCE = '0'
+			WHERE SLIP_NO = #{slipNo}
+  		</update>
+  		
+  		<update id="approvalSlip" parameterType="Map">
+  			UPDATE SLIP 
+			       SET APPROVAL_EMP_CODE = #{approvalEmpCode} 
+			     , APPROVAL_DATE = #{approvalDate} 
+			     , SLIP_STATUS = '승인' 
+			 WHERE SLIP_NO = #{slipNo}
+  		</update>
+  		
+</mapper>

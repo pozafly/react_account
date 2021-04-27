@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seoulit.erp.logi.logiBase.dao.ProductionLineDao">
+	<select id="selectProductionLineList"
+		resultType="ProductionLineTo">
+		
+		SELECT
+			PRODUCTION_LINE_CODE as productionLineCode,
+			PRODUCTABLE_ITEM_CODE as productableItemCode,
+			MIN_AVL_STAFF as minAvlStaff,
+			MAX_AVL_STAFF as maxAvlStaff,
+			DAILY_AVRG_PRDCT as dailyAvrgPrdct 
+		FROM 
+			PRODUCTION_LINE
+	</select>
+	
+	<insert id="insertProductionLine" parameterType="productionLineTo">
+		INSERT INTO PRODUCTION_LINE
+		VALUES
+		(
+		#{productionLineCode}
+		, #{productableItemCode}
+		, #{minAvlStaff}
+		, #{maxAvlStaff}
+		, #{dailyAvrgPrdct}
+		)
+	</insert>
+	
+	<update id="updateProductionLine" parameterType="productionLineTo">
+		UPDATE 
+		PRODUCTION_LINE	SET 
+			 PRODUCTABLE_ITEM_CODE = #{productableItemCode}
+			,MIN_AVL_STAFF = #{minAvlStaff}
+			,MAX_AVL_STAFF = #{maxAvlStaff}
+			,DAILY_AVRG_PRDCT = #{dailyAvrgPrdct}
+			WHERE PRODUCTION_LINE_CODE = #{productionLineCode}
+	</update>
+	
+	<delete id="deleteProductionLine" parameterType="productionLineTo">
+		DELETE FROM PRODUCTION_LINE
+		WHERE
+		PRODUCTION_LINE_CODE = #{productionLineCode}
+	</delete>
+	
+</mapper>

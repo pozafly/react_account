@@ -1,0 +1,111 @@
+import React from "react";
+import {
+  Route,
+  Switch,
+  Redirect,
+  withRouter,
+} from "react-router-dom";
+import classnames from "classnames";
+
+// styles
+import useStyles from "./styles";
+
+
+// components
+import HeaderContainer from "../Header/HeaderContainer";
+import Sidebar from "../Sidebar/Sidebar";
+
+
+// pages
+import Dashboard from "../../../pages/dashboard/Dashboard";
+
+
+import * as additional from './additionalFunctionRouteComponents/additionalFunctionComponent'
+import * as account from "./PageRouteComponents/accountPageComponents";
+//import * as logisics from "./PageRouteComponents/accountPageComponents";
+import * as personnel from "./PageRouteComponents/personnelPageComponents";
+
+// context
+import { useLayoutState } from "../../../api/context/LayoutContext";
+
+
+
+
+
+function Layout(props) {
+
+  var classes = useStyles();
+
+  // global
+  var layoutState = useLayoutState();
+
+  return (
+    <div className={classes.root}>
+        <>
+          <HeaderContainer history={props.history} />
+          <Sidebar />
+          <div
+            className={classnames(classes.content, {
+              [classes.contentShift]: layoutState.isSidebarOpened,
+            })}
+          >
+            <div className={classes.fakeToolbar} />
+
+            <Switch>
+              <Route path="/app/dashboard" component={Dashboard} />{/* 메인 홈 */}
+
+                      {/* 회계업무 Route */}
+              <Route
+                exact
+                path="/app/acc"
+                render={() => <Redirect to="/app/acc/accBookMgt/journal" />}    
+              />                                                                                                {/* 장부관리 */}
+                <Route path="/app/acc/accBookMgt/journal" component={account.Journal} />                        {/* 분개장 */}
+                <Route path="/app/acc/accBookMgt/accountTitle" component={account.AccountTitle} />                       {/* 계정과목코드 */}
+                {/* <Route path="/app/acc/accBookMgt/detailTrialBalance" component={account.DetailTrialBalance} />  계정과목코드 */}
+                <Route path="/app/acc/slip/addSlip" component={account.addSlip} />
+
+
+                      {/* 인사업무 Route */}
+              <Route
+                exact
+                path="/app/hr"
+                render={() => <Redirect to="/app/hr/circumstance/basicWorktime" />}    
+              />
+                <Route path="/app/hr/circumstance/basicWorktime" component={personnel.BasicWorktime} />
+                <Route path="/app/hr/circumstance/holiday" component={personnel.Holiday} />
+
+
+                      {/* 물류업무 Route */}
+              <Route
+                exact
+                path="/app/logi"
+                render={() => <Redirect to="/app/acc/accBookMgt/journal" />}    
+              />
+                
+
+
+
+
+                      {/* 부가기능 Route */}
+              <Route path="/app/typography" component={additional.Typography} />
+              <Route path="/app/tables" component={additional.Tables} />
+              <Route path="/app/notifications" component={additional.Notifications} />
+              <Route
+                exact
+                path="/app/ui"
+                render={() => <Redirect to="/app/ui/icons" />}
+              />
+              <Route path="/app/ui/maps" component={additional.Maps} />
+              <Route path="/app/ui/icons" component={additional.Icons} />
+              <Route path="/app/ui/charts" component={additional.Charts} />
+            </Switch>
+          </div>
+        </>
+    </div>
+  );
+}
+
+
+
+export default withRouter(Layout);

@@ -1,0 +1,16 @@
+package com.seoulit.erp.account.accBookMgt.service;
+
+import java.util.List;
+
+import org.springframework.dao.DataAccessException;
+
+import com.seoulit.erp.account.accBookMgt.to.JournalFormTO;
+
+
+
+public interface JournalFormServiceFacade {
+
+	
+	public List<JournalFormTO> getJournalList(String startDate,String endDate);
+	
+}

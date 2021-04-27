@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seoulit.erp.logi.logiBase.dao.DispositionWorkmanDao">
+	<select id="selectDispositionOfWorkman"
+		resultType="DispositionWorkTo"
+		parameterType="map">
+
+		SELECT
+			 FACTORY_CODE as factoryCode,
+			 FACTORY_PRODUCTION_LINE_NO as factoryProductionLineNo,
+			 PRODUCTION_LINE_CODE as productionLineCode,
+			 EMP_CODE as empCode,
+			 EMP_NAME as empName,
+			 POSITION as position,
+			 EMPLOYMENT_STATUS as employmentStatus
+		FROM 
+			DISPOSITION_OF_WORKMAN 
+		WHERE 
+			FACTORY_CODE = #{factoryCode}
+		<if test="code=='productionLine'">
+			AND FACTORY_PRODUCTION_LINE_NO = #{factoryPLNo}
+		</if>
+
+
+	</select>
+	
+</mapper>

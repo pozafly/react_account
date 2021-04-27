@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seoulit.erp.hr.pm.dao.EmployeeDao">
+
+
+<!-- employeeDao -->
+
+
+	<resultMap type="EmployeeTo" id="employeeResult">
+
+		<result property="empCode" column="EMP_CODE" />
+		<result property="empName" column="EMP_NAME" />
+	</resultMap>
+
+
+	<select id="selectEmployeeList" resultMap="employeeResult">
+		SELECT
+			EMP_CODE as empCode,
+			EMP_NAME as empName,
+			PASSWORD as password,
+			POSITION_CODE as positionCode,
+			AUTHORITY_CODE as authorityCode,
+			DEPT_CODE as deptCode,
+			BUSINESS_PLACE_CODE as businessPlaceCode
+		FROM
+			EMPLOYEE
+	</select>
+
+	<select id="selectEmployee" parameterType="string" resultType="EmployeeTo">
+
+		SELECT
+		EMP_CODE as empCode,
+		EMP_NAME as empName,
+		PASSWORD as password,
+		POSITION_CODE as positionCode,
+		AUTHORITY_CODE as authorityCode,
+		DEPT_CODE as deptCode,
+		BUSINESS_PLACE_CODE as businessPlaceCode
+		FROM EMPLOYEE
+		WHERE EMP_CODE=#{empCode}
+
+	</select>
+
+	<insert id="insertEmployee" parameterType="EmployeeTo">
+
+-- 		INSERT INTO EMPLOYEE(
+-- 		EMP_CODE, EMP_NAME, COMPANY_CODE, WORKPLACE_CODE
+-- 		, DEPT_CODE, POSITION_CODE, SOCIAL_SECURITY_NUMBER
+-- 		, BIRTH_DATE, GENDER, EMAIL, PHONE_NUMBER, IMAGE
+-- 		, USER_PW, ZIP_CODE, BASIC_ADDRESS, DETAIL_ADDRESS
+-- 		, LEVEL_OF_EDUCATION, USER_OR_NOT
+-- 		)
+-- 		VALUES
+-- 		( #{empCode}, #{empName}, #{companyCode}, #{workplaceCode}, #{deptCode},
+-- 		#{positionCode}, #{socialSecurityNumber}, #{birthDate}, #{gender}, #{email},
+-- 		#{phoneNumber}, #{image}, #{userPw}, #{zipCode}, #{basicAddress}, #{detailAddress},
+-- 		#{levelOfEducation}, #{userOrNot}
+-- 		 )
+
+	</insert>
+
+
+	<update id="updateEmployee" parameterType="EmployeeTo">     <!-- 발령시에 업데이트 될수있도록  by.seunghyeon -->
+        UPDATE  EMPLOYEE
+        SET     EMP_CODE        =#{empCode},
+			    POSITION_CODE   =#{positionCode},
+			    DEPT_CODE       =#{deptCode}
+        WHERE   EMP_CODE        =#{empCode}
+	</update>
+
+<delete id="deleteEmployee" parameterType="EmployeeTo">
+		DELETE FROM EMPLOYEE
+		WHERE EMP_CODE =  #{empCode}
+	</delete>
+
+
+
+
+</mapper>

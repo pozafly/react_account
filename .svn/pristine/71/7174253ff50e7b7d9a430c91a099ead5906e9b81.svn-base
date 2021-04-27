@@ -1,0 +1,69 @@
+import React, { useEffect } from 'react';
+import useAxios from "../../../../api/util/useAxios";
+
+import { AgGridReact } from "ag-grid-react";
+
+const AccountParent = ({setAccountCode}) => {
+
+  const accountColumnDefs = [
+    {
+      headerName: "계정과목 코드",
+      field: "accountInnerCode",
+      width: 270
+    },
+    {
+      headerName: "계정과목 명",
+      field: "accountName",
+      width: 270
+    }
+  ];
+
+  // 그리드 객체 선언
+  // const [gridApi, setGridApi] = useState();
+  // const onGridReady = params => {
+  //     setGridApi(params.api);
+  // }
+  //const rowSelection = ;
+  
+  const onRowSelected = e => {
+    console.log(e.data.accountInnerCode);
+    //console.log(e.data.parentAccountInnercode);
+    if(e.node.selected){
+      setAccountCode(e.data.accountInnerCode);
+    }
+  };
+
+  const axiosOptions = {
+    url: `http://localhost:8282/account/accountTitle/findParentAccountList`,
+    method: "GET",
+    fetchOnStart: false
+  };
+
+  // const code = useInput();
+  const { data, fetch } = useAxios(axiosOptions);
+
+  useEffect(() => {
+    fetch(axiosOptions);
+    console.log(data);
+  });
+
+
+  return (
+    <div
+      className={"ag-theme-material"}
+      style={{
+        height: "550px",
+        width: "100%",
+        paddingTop: "20px"
+      }}>
+      <AgGridReact
+        columnDefs={accountColumnDefs}
+        rowData={data}
+        onRowSelected={onRowSelected}
+        rowSelection="single"
+      />
+    </div>
+  );
+};
+
+export default AccountParent;

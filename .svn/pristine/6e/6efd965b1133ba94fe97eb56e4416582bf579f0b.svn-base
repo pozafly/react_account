@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seoulit.erp.logi.production.dao.WorkInstructionDao">
+
+	<!-- workInstructionDao -->
+
+
+	<resultMap type="WorkInstructionTo"
+		id="workInstructionResult">
+
+		<result property="workInstructionNo"
+			column="WORK_INSTRUCTION_NO" />
+		<result property="mrpGatheringNo" column="MRP_GATHERING_NO" />
+		<result property="itemCode" column="ITEM_CODE" />
+		<result property="itemName" column="ITEM_NAME" />
+		<result property="instructionDate" column="INSTRUCTION_DATE" />
+		<result property="unitOfWorkInstruction"
+			column="UNIT_OF_WORK_INSTRUCTION" />
+		<result property="workInstructionAmount"
+			column="WORK_INSTRUCTION_AMOUNT" />
+		<result property="productionStatus" column="PRODUCTION_STATUS" />
+		<result property="description" column="DESCRIPTION" />
+		<result property="workInstructionStatus"
+			column="WORK_INSTRUCTION_STATUS" />
+		<result property="productionLineCode" column="PRODUCTION_LINE_CODE" />
+
+	</resultMap>
+
+
+	<select id="selectWorkInstructionList"
+		resultMap="workInstructionResult">
+
+		SELECT
+			WORK_INSTRUCTION_NO, MRP_GATHERING_NO, ITEM_CODE,
+			ITEM_NAME, INSTRUCTION_DATE, UNIT_OF_WORK_INSTRUCTION,
+			WORK_INSTRUCTION_AMOUNT, PRODUCTION_STATUS, DESCRIPTION,
+			WORK_INSTRUCTION_STATUS,
+	        PRODUCTION_LINE_CODE
+		FROM PRODUCTION_WORK_INSTRUCTION
+		WHERE PRODUCTION_STATUS IS NULL
+        AND
+        WORK_INSTRUCTION_STATUS IS NULL
+
+	</select>
+	
+		<select id="selectWorkInstructionList2"
+		resultMap="workInstructionResult">
+
+		SELECT
+			WORK_INSTRUCTION_NO, MRP_GATHERING_NO, ITEM_CODE,
+			ITEM_NAME, INSTRUCTION_DATE, UNIT_OF_WORK_INSTRUCTION,
+			WORK_INSTRUCTION_AMOUNT, PRODUCTION_STATUS, DESCRIPTION,
+			WORK_INSTRUCTION_STATUS,
+	        PRODUCTION_LINE_CODE
+		FROM PRODUCTION_WORK_INSTRUCTION
+		WHERE PRODUCTION_STATUS = 'Y'
+		AND
+		WORK_INSTRUCTION_STATUS IS NULL
+       
+
+	</select>
+
+	
+	<select id="selectWorkInstructionList3"
+		resultMap="workInstructionResult">
+
+		SELECT
+			WORK_INSTRUCTION_NO, MRP_GATHERING_NO, ITEM_CODE,
+			ITEM_NAME, INSTRUCTION_DATE, UNIT_OF_WORK_INSTRUCTION,
+			WORK_INSTRUCTION_AMOUNT, PRODUCTION_STATUS, DESCRIPTION,
+			WORK_INSTRUCTION_STATUS,
+	        PRODUCTION_LINE_CODE
+		FROM PRODUCTION_WORK_INSTRUCTION
+		
+	
+		
+       
+
+	</select>
+
+
+	<insert id="insertWorkInstruction"
+		parameterType="WorkInstructionTo">
+
+		INSERT INTO PRODUCTION_WORK_INSTRUCTION
+		VALUES
+		(
+		#{workInstructionNo}
+		, #{mrpGatheringNo}
+		, #{itemCode}
+		, #{itemName}
+		,
+		#{instructionDate}
+		, #{unitOfWorkInstruction}
+		, #{workInstructionAmount}
+		,
+		#{productionStatus}
+		, #{description}
+		, #{workInstructionStatus} )
+
+	</insert>
+
+
+
+	<update id="updateWorkInstruction"
+		parameterType="String"
+		
+		>
+
+		UPDATE PRODUCTION_WORK_INSTRUCTION SET
+		PRODUCTION_STATUS = 'Y'
+        WHERE
+        WORK_INSTRUCTION_NO = #{workInstructionNo}
+        AND
+        PRODUCTION_STATUS IS NULL
+        AND
+        WORK_INSTRUCTION_STATUS IS NULL
+        <!-- COMMIT; -->
+        
+	</update>
+	
+	<update id="updateWorkInstruction2"
+		parameterType="String"
+		
+		>
+
+		UPDATE PRODUCTION_WORK_INSTRUCTION SET
+		WORK_INSTRUCTION_STATUS = 'Y'
+        WHERE
+        WORK_INSTRUCTION_NO = #{workInstructionNo}
+        AND
+        PRODUCTION_STATUS = 'Y'
+        AND
+        WORK_INSTRUCTION_STATUS IS NULL
+        <!-- COMMIT; -->
+        
+	</update>
+
+
+	<delete id="deleteWorkInstruction"
+		parameterType="WorkInstructionTo">
+
+		DELETE FROM PRODUCTION_WORK_INSTRUCTION
+		WHERE
+		WORK_INSTRUCTION_NO = #{workInstructionNo}
+		AND
+		MRP_GATHERING_NO =
+		#{mrpGatheringNo}
+
+
+	</delete>
+
+
+	<resultMap id="materialCheckResult"
+		type="materialCheckTempTO">
+		<result property="itemCode" column="ITEM_CODE" />
+		<result property="itemName" column="ITEM_NAME" />
+		<result property="stocktaking" column="STOCKTAKING" />
+		<result property="safetyStocktaking"
+			column="SAFETY_STOCKTAKING" />
+		<result property="stockStatus" column="STOCK_STATUS" />
+		<result property="safetyStockStatus"
+			column="SAFETY_STOCK_STATUS" />
+
+	</resultMap>
+
+
+
+	<parameterMap id="materialCheckParameter" type="map">
+		<parameter property="mrpGno" jdbcType="VARCHAR"
+			javaType="java.lang.String" mode="IN" />
+		<parameter property="productionLineCode" jdbcType="VARCHAR"
+			javaType="java.lang.String" mode="IN" />
+		<parameter property="errorCode" jdbcType="NUMERIC"
+			javaType="int" mode="OUT" />
+		<parameter property="errorMsg" jdbcType="VARCHAR"
+			javaType="string" mode="OUT" />
+		<parameter property="result" jdbcType="CURSOR"
+			javaType="java.sql.ResultSet" mode="OUT"  resultMap="materialCheckResult"/>
+	</parameterMap>
+
+	<select id="materialCheckTempList" statementType="CALLABLE"
+            parameterMap="materialCheckParameter" resultType="com.seoulit.erp.logi.production.to.MaterialCheckTempTo">
+   <![CDATA[
+        {call PKG_WORK_INSTRUCTION.P_WORK_INSTRUCTION_OPEN(?,?,?,?,?)}
+    ]]>
+	</select>
+
+
+
+</mapper>

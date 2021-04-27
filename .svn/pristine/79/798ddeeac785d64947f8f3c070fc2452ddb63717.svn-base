@@ -1,0 +1,53 @@
+import React from "react";
+import {
+  Route,
+  Redirect,
+  withRouter,
+} from "react-router-dom";
+
+
+
+
+const AccountPageRoute = () => {
+    return (
+        <React.Fragment>
+            <Route
+                exact
+                path="/app/acc/accBookMgt"
+                render={() => <Redirect to="/app/acc/accBookMgt/journal" />}    
+            />                                                                                              {/* 장부관리 */}
+
+ 
+            <Route
+                exact
+                path="/app/acc/statement"
+                render={() => <Redirect to="/app/acc/statement/totalTrialBalance" />}
+            />                                                                                              {/* 결산재무제표 */}
+                {/* <Route path="/app/acc/statement/totalTrialBalance" component={Account.totalTrialBalance} />     합계잔액시산표 */}
+                
+
+
+            <Route
+                exact
+                path="/app/acc/accountTitle"
+                render={() => <Redirect to="/app/acc/accountTitle" />}
+            />                                                                                              {/* 회계코드관리 */}
+                {/* <Route path="/app/acc/accountTitle" component={Account.accountTitle} />                         계정과목관리 */}
+
+        </React.Fragment>
+    );
+};
+
+export default withRouter(AccountPageRoute);
+
+
+
+
+            //     <Route
+            //     exact
+            //     path="/app/ui"
+            //     render={() => <Redirect to="/app/ui/icons" />}
+            //   />
+            //     <Route path="/app/ui/maps" component={Maps} />
+            //     <Route path="/app/ui/icons" component={Icons} />
+            //     <Route path="/app/ui/charts" component={Charts} />

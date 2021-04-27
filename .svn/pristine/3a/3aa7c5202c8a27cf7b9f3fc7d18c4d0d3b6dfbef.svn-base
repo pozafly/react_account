@@ -1,0 +1,100 @@
+import React, { useState } from 'react';
+
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-balham.css";
+
+import { makeStyles, Grid } from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Button from '@material-ui/core/Button';
+
+const JournalGrid = ({ slipInfo }) => {
+
+    //========================== 그리드 객체 준비 ==========================
+    const [positionGridApi, setPositionGridApi] = useState();
+    const onGridReady = params => {
+        setPositionGridApi(params.api);
+    };
+
+    const classes = useStyles();
+    //const { startDate, endDate, slipStatus } = state;
+    const [data, setData] = useState('');
+
+
+    //========================== 그리드내용 ==========================
+    const accountColumnDefs = [
+        { headerName: "분개일련번호", field: "journalNo", width: 250 },
+        { headerName: "계정코드", field: "accountInnerCode", width: 100 },
+        { headerName: "계정명", field: "accountName", width: 110 },
+        { headerName: "대차구분", field: "balanceDivision", width: 100 },
+        { headerName: "적요", field: "summaryComment", width: 180, editable: true },
+        { headerName: "거래처코드", field: "customerCode", width: 110 },
+        { headerName: "거래처명", field: "customerName", width: 110 },
+        { headerName: "금액", field: "price", width: 110 },
+    ];
+
+    return (
+        <div>
+            <Paper className={classes.paper}>
+                <div className={classes.root} style={{ width: '30%', float: 'left' }}>
+                    <Button variant="contained" color="primary" disabled>
+                        그리드초기화
+                    </Button>
+                </div>
+                <div className={classes.root} style={{ width: '27%', float: 'right' }}>
+                    <Button variant="contained" color="primary" disabled>
+                        분개추가
+                    </Button>
+                    <Button variant="contained" color="primary" disabled>
+                        분개삭제
+                    </Button>
+                    <Button variant="contained" color="primary" disabled>
+                        분개저장
+                    </Button>
+                </div>
+                <AppBar position="relative" className={classes.subCategory}>
+                    <Toolbar>
+                        <Typography variant="h5">분개</Typography>
+                    </Toolbar>
+                </AppBar>
+                <div
+                    className={"ag-theme-balham"}
+                    style={{
+                        height: "220px",
+                        width: "100%",
+                        paddingTop: "20px"
+                    }}>
+                    <AgGridReact
+                        columnDefs={accountColumnDefs}
+                        rowData={data}
+                        rowSelection='single'
+                        onGridReady={onGridReady}
+                    />
+                </div>
+                <br />
+            </Paper>
+        </div>
+    );
+};
+
+const useStyles = makeStyles(theme => ({
+    paper: {
+        padding: theme.spacing(1),
+        height: 330,
+        width: 1190
+    },
+    subCategory: {
+        background: "#232f3e",
+        color: "white"
+    },
+    root: {
+        '& > *': {
+            margin: theme.spacing(1),
+        },
+    },
+}));
+
+export default JournalGrid;

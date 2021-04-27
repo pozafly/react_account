@@ -1,0 +1,49 @@
+import React, { useState } from "react";
+
+import SlipGrid from "./SlipGrid";
+import SlipHead from './SlipHead';
+import JournalGrid from './JournalGrid';
+
+import useInputs from "../../../../../api/util/useInputs";
+
+
+const AddSlip = () => {
+
+    function leadingZeros(n, digits) {
+        var zero = '';
+        n = n.toString();
+    
+        if (n.length < digits) {
+            for (var i = 0; i < digits - n.length; i++)
+                zero += '0';
+        }
+        return zero + n;
+    }
+    
+    let now = new Date();
+    let year = now.getFullYear();
+    let month = leadingZeros(now.getMonth() + 1, 2);
+    let date = leadingZeros(now.getDate(), 2);
+    let today = year + '-' + month + '-' + date;
+
+    const [headInfo, headChange] = useInputs(
+        {
+            startDate: '2019-04-01',
+            endDate: today,
+            slipStatus: ''
+        }
+    );
+
+    const [slipNo, setSlipNo] = useState('');
+    const [flag, setFlag] = useState(true);
+console.log("야이야이야" + slipNo)
+    return (
+        <div>
+            <SlipHead headInfo={headInfo} headChange={headChange} />
+            <SlipGrid headInfo={headInfo} today={today} setSlipNo={setSlipNo} setFlag={setFlag}/>
+            <br/>
+            <JournalGrid slipNo={slipNo} flag={flag} today={today}/>
+        </div>
+    );
+}
+export default AddSlip;

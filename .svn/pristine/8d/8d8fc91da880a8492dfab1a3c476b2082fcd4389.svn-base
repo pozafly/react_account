@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seoulit.erp.account.statement.dao.TotalTrialBalanceDAO">
+
+    
+    <resultMap type="totalTrialBalanceTO" id="totalTrialBalanceResult">
+
+		<result property="accountName" column="ACCOUNT_NAME" />
+		<result property="accountInnerCode" column="ACCOUNT_INNER_CODE" />
+		<result property="debitsSumBalance" column="DEBITS_SUM_BALANCE" />
+		<result property="debitsSum" column="DEBITS_SUM" />
+		<result property="creditsSum" column="CREDITS_SUM" />
+		<result property="creditsSumBalance" column="CREDITS_SUM_BALANCE" />
+		
+    </resultMap>
+   
+   	<select id="selectTotalTrialBalanceList" statementType="CALLABLE" >
+		<![CDATA[
+			{call P_TOTAL_TRIAL_BALANCE (#{approvalDate, mode=IN, javaType=String, jdbcType=VARCHAR},
+								   		 #{errorCode, mode=OUT, javaType=Integer, jdbcType=DECIMAL},
+								   		 #{errorMsg, mode=OUT, javaType=String, jdbcType=VARCHAR},
+								   		 #{result, mode=OUT, javaType=java.sql.ResultSet, jdbcType=CURSOR, resultMap=totalTrialBalanceResult})}
+								   
+		]]>   									 
+    </select>
+</mapper>

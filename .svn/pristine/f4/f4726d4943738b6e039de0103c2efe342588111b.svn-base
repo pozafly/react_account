@@ -1,0 +1,52 @@
+// 기초환경설정 /app/hr/circumstance-----------------------------------------------------------
+
+
+
+// HR01	HR00	기초환경설정	/app/hr/circumstance
+import payStep from "../../../../pages/erp/personnel/circumstance/PayStep";                       // 호봉테이블 관리	/app/hr/circumstance/payStep
+import registPayDeduction from "../../../../pages/erp/personnel/circumstance/RegistPayDeduction";
+// HR0103	HR01	지급공제항목등록	/app/hr/circumstance/registPayDeduction
+// HR0104	HR01	사회보험환경등록	/app/hr/circumstance/registDeductionTax
+// HR0105	HR01	기본근무시간관리	/app/hr/circumstance/basicWorktime
+// HR0106	HR01	휴일관리	/app/hr/circumstance/holiday
+// HR0107	HR01	휴가/연차관리	/app/hr/circumstance/annualLeave
+// HR0108	HR01	수당관리	/app/hr/circumstance/allowance
+
+
+
+
+export { default as payStep } from "../../../../pages/erp/personnel/circumstance/PayStep";
+export { default as registPayDeduction } from "../../../../pages/erp/personnel/circumstance/RegistPayDeduction";
+export { default as registDeductionTax } from "../../../../pages/erp/personnel/circumstance/RegistDeductionTax";
+export { default as basicWorktime } from "../../../../pages/erp/personnel/circumstance/BasicWorkTime";
+export { default as holiday } from "../../../../pages/erp/personnel/circumstance/Holiday";
+export { default as annualLeave } from "../../../../pages/erp/personnel/circumstance/AnnualLeave";
+export { default as allowance } from "../../../../pages/erp/personnel/circumstance/Allowance";
+
+//-----------------------------------------------------------
+
+export { default as registPersonnelInfo } from "../../../../pages/erp/personnel/pm/RegistPersonnelInfo";
+export { default as personnelRecordCard } from "../../../../pages/erp/personnel/pm/PersonnelRecordCard";
+
+//---------------------------------------------------------------
+
+export { default as dailyAttd } from "../../../../pages/erp/personnel/attendance/DailyAttd";
+export { default as monthlyAttd } from "../../../../pages/erp/personnel/attendance/MonthlyAttd";
+export { default as attdApproval } from "../../../../pages/erp/personnel/attendance/AttdApproval";
+/* export {
+  default as dailyAttdApply
+} from "./personnel/attendance/DailyAttdApply";  */
+
+export { default as dailyAttdApply } from "../../../../pages/erp/personnel/DailyAttdApplyCon";
+export { default as restDailyAttdApply } from "../../../../pages/erp/personnel/attendance/RestDailyAttdApply";
+export { default as annualLeaveApply } from "../../../../pages/erp/personnel/attendance/AnnualLeaveApply";
+export { default as overNightApply } from "../../../../pages/erp/personnel/attendance/OverNightApply";
+
+//------------------------------------------------------------------
+
+export { default as registPersonnelByEmpoyee } from "../../../../pages/erp/personnel/appointment/RegistPersonnelByEmpoyee";
+export { default as registAppointment } from "../../../../pages/erp/personnel/appointment/RegistAppointment";
+
+//-------------------------------------------------------------------
+
+export { default as salary } from "../../../../pages/erp/personnel/pay/Salary";

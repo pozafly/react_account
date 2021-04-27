@@ -1,0 +1,27 @@
+import React from "react";
+import {
+  Route,
+  Switch,
+  Redirect,
+  withRouter,
+} from "react-router-dom";
+
+import React from 'react';
+
+import * as Logistics from 'components/erp/Logistics';
+
+
+const accountPageRoute = () => {
+    return (
+        <React.Fragment>
+            <Route path="/app/acc/accBookMgt/journal" component={Account.journal} />{/* 메인 홈 */}
+            <Route path="/app/typography" component={Typography} />
+            <Route path="/app/tables" component={Tables} />
+            <Route path="/app/notifications" component={Notifications} />
+        </React.Fragment>
+    );
+};
+
+export default accountPageRoute;
+
+

@@ -1,0 +1,346 @@
+import React, { useState } from "react";
+import Paper from "@material-ui/core/Paper";
+import TextField from "@material-ui/core/TextField";
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-material.css";
+import Button from "@material-ui/core/Button";
+import { Grid } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Typography from "@material-ui/core/Typography";
+import Toolbar from "@material-ui/core/Toolbar";
+import useAxios from "utils/useAxios";
+import useInput from "utils/useInput";
+import Table from "@material-ui/core/Table";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
+
+const useStyles = makeStyles(theme => ({
+  rightPaper: {
+    padding: theme.spacing(2),
+    height: 650
+  },
+  leftPaper: {
+    padding: theme.spacing(2),
+    height: 650
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 250
+  },
+  subCategory: {
+    background: "#232f3e",
+    color: "white"
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
+  },
+  disable: {
+    color: "white",
+    borderRadius: 8,
+    backgroundColor: "gray"
+  }
+}));
+
+const BasicWorkTime = props => {
+  const classes = useStyles();
+  const {value, onChange, setValue} = useInput("");
+
+  const axiosOptions = {
+    url: `http://localhost:8282/hr/circumstance/findBaseWorkTimeList`,
+    fetchOnStart: true,
+    method: "post",
+    data: applyYear.value
+
+  };
+
+  const { data, fetch } = useAxios(axiosOptions);
+
+  const [workTimeData, setWorkTimeData] =useState({
+    attendTime:'',
+    quitTime:'',
+    lunchStartTime:'',
+    lunchEndTime:'',
+    overTime:'',
+    nightTime:''
+  })
+
+
+
+  const fetchWorkTimeInfo = () => {
+
+    var newValue={}
+    
+    data.forEach((obj, index) => {
+      if (applyYear.value)
+        if (obj.applyYear === applyYear.value.toString().substring(0, 4))
+        newValue={
+          ...workTimeData,
+          obj
+        }
+        setWorkTimeData(newValue)
+    });
+
+
+
+  };
+
+  const onChangeValue = (e) =>{
+
+    const newValue={
+      ...workTimeData,
+      [e.target.id]: e.target.value
+    }
+    setWorkTimeData(newValue)
+  }
+  
+  // const [attendTime, setAttendTime] = useState("");
+  // const [quitTime, setQuitTime] = useState("");
+  // const [lunchStartTime, setLunchStartTime] = useState("");
+  // const [lunchEndTime, setLunchEndTime] = useState("");
+  // const [overTime, setOverTime] = useState("");
+  // const [nightTime, setNightTime] = useState("");
+
+  const deleteWorkTimeInfo = () => {};
+
+  const saveWorkTimeInfo = () => {};
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Paper className={classes.leftPaper}>
+          <AppBar position="relative" className={classes.subCategory}>
+            <Toolbar>
+              <Typography variant="h5">근무시간 정보</Typography>
+            </Toolbar>
+          </AppBar>
+          <form>
+            <Table>
+              <TableRow>
+                <td>
+                  <TableCell>
+                    <TextField
+                      id="outlined-read-only-input"
+                      defaultValue="적용날짜선택"
+                      className={classes.disable}
+                      InputProps={{
+                        readOnly: true
+                      }}
+                      variant="outlined"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      id="applyYear"
+                      type="date"
+                      defaultValue={applyYear.value}
+                      onChange={onChangeValue}
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      variant="outlined"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant={"outlined"}
+                      color={"primary"}
+                      onClick={fetchWorkTimeInfo}
+                    >
+                      조회
+                    </Button>
+                  </TableCell>
+                </td>
+              </TableRow>
+              <TableRow>
+                <td>
+                  <TableCell>
+                    <TextField
+                      id="outlined-read-only-input"
+                      defaultValue="출근시간"
+                      className={classes.disable}
+                      InputProps={{
+                        readOnly: true
+                      }}
+                      variant="outlined"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      id="attendTime"
+                      variant="outlined"
+                      value={attendTime.value}
+                      onChange={onChangeValue}
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                    />
+                  </TableCell>
+                </td>
+              </TableRow>
+              <TableRow>
+                <td>
+                  <TableCell>
+                    <TextField
+                      id="outlined-read-only-input"
+                      defaultValue="퇴근시간"
+                      className={classes.disable}
+                      InputProps={{
+                        readOnly: true
+                      }}
+                      variant="outlined"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      id="quitTime"
+                      variant="outlined"
+                      // value={quitTime}
+                      // onChange={quitTime.onChange}
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                    />
+                  </TableCell>
+                </td>
+              </TableRow>
+              <TableRow>
+                <td>
+                  <TableCell>
+                    <TextField
+                      id="outlined-read-only-input"
+                      defaultValue="점심시간시작"
+                      className={classes.disable}
+                      InputProps={{
+                        readOnly: true
+                      }}
+                      variant="outlined"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      id="lunchStartTime"
+                      variant="outlined"
+                      // value={lunchStartTime}
+                      // onChange={lunchStartTime.onChange}
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                    />
+                  </TableCell>
+                </td>
+              </TableRow>
+              <TableRow>
+                <td>
+                  <TableCell>
+                    <TextField
+                      id="outlined-read-only-input"
+                      defaultValue="점심시간종료"
+                      className={classes.disable}
+                      InputProps={{
+                        readOnly: true
+                      }}
+                      variant="outlined"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      id="lunchEndTime"
+                      variant="outlined"
+                      // value={lunchEndTime}
+                      // onChange={lunchEndTime.onChange}
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                    />
+                  </TableCell>
+                </td>
+              </TableRow>
+              <TableRow>
+                <td>
+                  <TableCell>
+                    <TextField
+                      id="outlined-read-only-input"
+                      defaultValue="연장근무시작시간"
+                      className={classes.disable}
+                      InputProps={{
+                        readOnly: true
+                      }}
+                      variant="outlined"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      id="overTime"
+                      variant="outlined"
+                      // value={overTime}
+                      // onChange={overTime.onChange}
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant={"outlined"}
+                      color={"primary"}
+                      onClick={deleteWorkTimeInfo}
+                    >
+                      삭제
+                    </Button>
+                  </TableCell>
+                </td>
+              </TableRow>
+              <TableRow>
+                <td>
+                  <TableCell>
+                    <TextField
+                      id="outlined-read-only-input"
+                      defaultValue="심야근무시작시간"
+                      className={classes.disable}
+                      InputProps={{
+                        readOnly: true
+                      }}
+                      variant="outlined"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      id="nightTime"
+                      variant="outlined"
+                      // value={nightTime}
+                      // onChange={nightTime.onChange}
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant={"outlined"}
+                      color={"primary"}
+                      onClick={saveWorkTimeInfo}
+                    >
+                      저장
+                    </Button>
+                  </TableCell>
+                </td>
+              </TableRow>
+            </Table>
+          </form>
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+};
+
+export default BasicWorkTime;
